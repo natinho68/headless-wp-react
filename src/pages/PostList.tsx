@@ -18,7 +18,7 @@ const PostList: React.FC<RouteComponentProps> = () => {
   const { response, error, isLoading } = useApiService<PostsData[]>('/wp-json/wp/v2/posts')
 
   if (isLoading) return <Loader />
-  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
+  if (error) return <ErrorToast errorTitle={'Error with posts fetching'} errorMessage={error.message} />
   return (
     <Row>
       {response?.map((item: PostsData) => (

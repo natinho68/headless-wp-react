@@ -15,7 +15,7 @@ const Home: React.FC<RouteComponentProps> = () => {
   const { response, error, isLoading } = useApiService<HomeData[]>('/wp-json/wp/v2/pages?slug=accueil')
 
   if (isLoading) return <Loader />
-  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
+  if (error) return <ErrorToast errorTitle={'Error with page fetching'} errorMessage={error.message} />
   return (
     <Row>
       {response?.map((item: HomeData) => (

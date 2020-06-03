@@ -28,7 +28,7 @@ export const SinglePost: React.FC<RouteComponentProps<any>> = () => {
   )
 
   if (isLoading) return <Loader />
-  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
+  if (error) return <ErrorToast errorTitle={'Error with post fetching'} errorMessage={error.message} />
   return (
     <div>
       {response?.map((item: SinglePostData) => (

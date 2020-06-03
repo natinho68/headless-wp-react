@@ -20,7 +20,7 @@ const Header: React.FC = () => {
   const siteNameQuery = useApiService<SiteData>('/wp-json')
   const siteName = siteNameQuery.response
 
-  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
+  if (error) return <ErrorToast errorTitle={'Error with header fetching'} errorMessage={error.message} />
   if (response && siteName)
     return (
       <Navbar bg="primary" expand="lg" className="navbar-dark mb-4">

@@ -18,7 +18,9 @@ export const CardItem: React.FC<CardProps> = ({ title, thumbnail, excerpt, ID, s
     <Card.Body>
       <Card.Title>{title}</Card.Title>
       <Card.Text dangerouslySetInnerHTML={{ __html: excerpt }} />
-      <Button variant="primary">Voir l'article</Button>
+      <Link to={`/${slug}`}>
+        <Button variant="primary">Voir l'article</Button>
+      </Link>
     </Card.Body>
   </Card>
 )

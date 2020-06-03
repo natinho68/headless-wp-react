@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { RouteComponentProps } from '@reach/router'
 import { CardItem } from '../components/Card'
+import useApiService from '../services/useApiService'
+import Loader from '../components/Loader'
+import ErrorToast from '../components/ErrorToast'
 
 interface PostsData {
   id: string
@@ -13,20 +15,13 @@ interface PostsData {
 }
 
 const PostList: React.FC<RouteComponentProps> = () => {
-  const [data, setData] = useState<Array<PostsData>>([])
+  const { response, error, isLoading } = useApiService<PostsData[]>('/wp-json/wp/v2/posts')
 
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const result = await axios('http://localhost:8009/wp-json/wp/v2/posts')
-      setData(result.data)
-    }
-
-    fetchData()
-  }, [])
-
+  if (isLoading) return <Loader />
+  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
   return (
     <Row>
-      {data?.map((item: PostsData) => (
+      {response?.map((item: PostsData) => (
         <Col key={item.id} sm={4} className="mb-4">
           <CardItem
             ID={item.id}

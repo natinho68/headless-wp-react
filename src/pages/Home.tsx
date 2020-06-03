@@ -1,7 +1,9 @@
 import { Row } from 'react-bootstrap'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { RouteComponentProps } from '@reach/router'
-import axios from 'axios'
+import useApiService from '../services/useApiService'
+import Loader from '../components/Loader'
+import ErrorToast from '../components/ErrorToast'
 
 interface HomeData {
   id: string
@@ -10,18 +12,13 @@ interface HomeData {
 }
 
 const Home: React.FC<RouteComponentProps> = () => {
-  const [data, setData] = useState<Array<HomeData>>([])
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const result = await axios('http://localhost:8009/wp-json/wp/v2/pages?slug=accueil')
-      setData(result.data)
-    }
+  const { response, error, isLoading } = useApiService<HomeData[]>('/wp-json/wp/v2/pages?slug=accueil')
 
-    fetchData()
-  }, [])
+  if (isLoading) return <Loader />
+  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
   return (
     <Row>
-      {data?.map((item: HomeData) => (
+      {response?.map((item: HomeData) => (
         <div key={item.id}>
           <h1>{item.title.rendered}</h1>
           <p dangerouslySetInnerHTML={{ __html: item.content.rendered }} />

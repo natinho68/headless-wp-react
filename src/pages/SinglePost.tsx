@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { RouteComponentProps, useParams } from '@reach/router'
-import axios from 'axios'
 import { Alert } from 'react-bootstrap'
+import useApiService from '../services/useApiService'
+import Loader from '../components/Loader'
+import ErrorToast from '../components/ErrorToast'
 
 interface SinglePostData {
   id: string
@@ -20,22 +22,16 @@ interface SinglePostData {
 }
 
 export const SinglePost: React.FC<RouteComponentProps<any>> = () => {
-  const [data, setData] = useState<Array<SinglePostData>>([])
-
   const params = useParams()
+  const { response, error, isLoading } = useApiService<SinglePostData[]>(
+    `/wp-json/wp/v2/posts/?slug=${params.postSlug}`
+  )
 
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      const result = await axios(`http://localhost:8009/wp-json/wp/v2/posts/?slug=${params.postSlug}`)
-      setData(result.data)
-    }
-
-    fetchData()
-  }, [params.postSlug])
-
+  if (isLoading) return <Loader />
+  if (error) return <ErrorToast errorTitle={'Error on header fetching'} errorMessage={error.message} />
   return (
     <div>
-      {data?.map((item: SinglePostData) => (
+      {response?.map((item: SinglePostData) => (
         <div key={item.id}>
           <h1>{item.title.rendered}</h1>
           {item.meta.manniSponso.length > 0 && <Alert variant={'info'}>This article is sponsored</Alert>}

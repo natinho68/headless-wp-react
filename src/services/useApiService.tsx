@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-export default function useApiService<T>(url: string): { response: T | null; error: Error | null; isLoading: boolean } {
+export default function useApiService<T>(
+  url: string
+): { response: T | null; error: Error | null; isLoading: boolean; pages: number | null } {
   const baseUrl = 'http://localhost:8009'
   const [response, setResponse] = useState(null)
   const [error, setError] = useState(null)
+  const [pages, setPages] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -12,6 +15,7 @@ export default function useApiService<T>(url: string): { response: T | null; err
       setIsLoading(true)
       try {
         const res = await axios(`${baseUrl}${url}`)
+        setPages(res.headers['x-wp-totalpages'])
         setResponse(res.data)
         setIsLoading(false)
       } catch (error) {
@@ -21,5 +25,5 @@ export default function useApiService<T>(url: string): { response: T | null; err
     }
     fetchData()
   }, [url])
-  return { response, error, isLoading }
+  return { response, error, isLoading, pages }
 }

@@ -6,6 +6,7 @@ import useApiService from '../services/useApiService'
 import Loader from '../components/Loader'
 import ErrorToast from '../components/ErrorToast'
 import Filter from '../components/Filter'
+import Paginate from '../components/Paginate'
 
 export interface PostsData {
   id: string
@@ -13,7 +14,7 @@ export interface PostsData {
   excerpt: { rendered: string }
   slug: string
   thumbnail: { cardHeader: string }
-  race: Array<string>
+  race: string
 }
 
 export interface TaxonomyData {
@@ -23,10 +24,13 @@ export interface TaxonomyData {
 }
 
 const PostList: React.FC<RouteComponentProps> = () => {
-  const { response, error, isLoading } = useApiService<PostsData[]>('/wp-json/wp/v2/posts')
-  const { response: taxonomyResponse, error: taxonomyError } = useApiService<TaxonomyData[]>('/wp-json/wp/v2/race')
   const [sortedResults, setSortedResults] = useState<PostsData[] | null>(null)
   const [filterByRace, setFilterByRace] = useState<null | number>(null)
+  const [currentPage, setPage] = useState<any>(1)
+  const { response, error, isLoading, pages } = useApiService<PostsData[]>(
+    `/wp-json/wp/v2/posts?per_page=6&page=${currentPage}`
+  )
+  const { response: taxonomyResponse, error: taxonomyError } = useApiService<TaxonomyData[]>('/wp-json/wp/v2/race')
 
   useEffect(() => {
     if (filterByRace) {
@@ -44,7 +48,12 @@ const PostList: React.FC<RouteComponentProps> = () => {
   return (
     <React.Fragment>
       {taxonomyResponse !== null && (
-        <Filter data={taxonomyResponse} filterByRace={filterByRace} setFilterByRace={setFilterByRace} />
+        <Filter
+          data={response}
+          taxonomies={taxonomyResponse}
+          filterByRace={filterByRace}
+          setFilterByRace={setFilterByRace}
+        />
       )}
       <Row>
         {sortedResults?.map((item: PostsData) => (
@@ -59,6 +68,9 @@ const PostList: React.FC<RouteComponentProps> = () => {
           </Col>
         ))}
       </Row>
+      {pages !== null && pages > 1 && (
+        <Paginate filter={setFilterByRace} setPage={setPage} currentPage={currentPage} totalPage={pages} />
+      )}
     </React.Fragment>
   )
 }

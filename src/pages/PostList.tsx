@@ -7,7 +7,7 @@ import Loader from '../components/Loader'
 import ErrorToast from '../components/ErrorToast'
 import Filter from '../components/Filter'
 
-interface PostsData {
+export interface PostsData {
   id: string
   title: { rendered: string }
   excerpt: { rendered: string }
@@ -37,8 +37,10 @@ const PostList: React.FC<RouteComponentProps> = () => {
 
   if (isLoading) return <Loader />
   if (error) return <ErrorToast errorTitle={'Error with posts fetching'} errorMessage={error.message} />
+  if (!response?.length) return <h1>Aucun article disponible</h1>
   if (taxonomyError)
-    return <ErrorToast errorTitle={'Error with taxonomy fetching'} errorMessage={taxonomyError.message} />
+    if (!response?.length)
+      return <ErrorToast errorTitle={'Error with taxonomy fetching'} errorMessage={taxonomyError.message} />
   return (
     <React.Fragment>
       {taxonomyResponse !== null && (

@@ -7,6 +7,7 @@ import { RouteComponentProps, Router } from '@reach/router'
 import PostList from './pages/PostList'
 import Home from './pages/Home'
 import { SinglePost } from './pages/SinglePost'
+import SearchResult from './pages/SearchResults'
 
 const App: React.FC<RouteComponentProps> = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC<RouteComponentProps> = () => {
           <Home path={'/'} />
           <PostList path={'/nos-chiens'} />
           <SinglePost path={'/:postSlug'} />
+          <SearchResult path={'/search/:search'} />
         </Router>
       </Container>
     </React.Fragment>

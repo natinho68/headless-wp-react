@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, Form, FormControl, Navbar, NavItem } from 'react-bootstrap'
+import { Navbar, NavItem } from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import { Link } from '@reach/router'
 import useApiService from '../services/useApiService'
 import ErrorToast from './ErrorToast'
+import SearchForm from './SearchForm'
 
 interface NavigationData {
   title: string
@@ -38,12 +39,7 @@ const Header: React.FC = () => {
               </NavItem>
             ))}
           </Nav>
-          <Form className={'my-2 my-lg-0'} inline>
-            <FormControl type="text" placeholder="Recherche" className="mr-sm-2" />
-            <Button variant="light" className="my-2 my-sm-0">
-              Search
-            </Button>
-          </Form>
+          <SearchForm />
         </Navbar.Collapse>
       </Navbar>
     )

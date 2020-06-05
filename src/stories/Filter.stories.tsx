@@ -1,6 +1,7 @@
 import React from 'react'
 import Filter from '../components/Filter'
+import { TaxonomyData } from '../pages/PostList'
 
 export default { title: 'Filter' }
 
-export const FilterPosts = () => <Filter />
+const data: TaxonomyData[] = [{ id: 1, name: 'English bulldog', slug: 'english-bulldog' }]

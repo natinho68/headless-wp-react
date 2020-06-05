@@ -1,21 +1,46 @@
-import React from 'react'
-import { Nav } from 'react-bootstrap'
+import React, { ChangeEvent, Dispatch, useState } from 'react'
+import { Button, ButtonGroup, ToggleButton } from 'react-bootstrap'
+import { TaxonomyData } from '../pages/PostList'
 
-const Filter: React.FC = () => {
+interface FilterProps {
+  data: Array<TaxonomyData>
+  setFilterByRace: Dispatch<React.SetStateAction<number | null>>
+  filterByRace: null | number
+}
+
+const Filter: React.FC<FilterProps> = ({ data, filterByRace, setFilterByRace }) => {
+  const [name, setName] = useState<string>('')
+  const [radioValue, setRadioValue] = useState<null | number>(null)
+
   return (
-    <Nav variant="pills" defaultActiveKey="/home">
-      <Nav.Item>
-        <Nav.Link href="/home">Active</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="link-1">Option 2</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="disabled" disabled>
-          Disabled
-        </Nav.Link>
-      </Nav.Item>
-    </Nav>
+    <div className={'mb-4'}>
+      {filterByRace !== null && <h1 className={'mb-4'}>Filter: {name}</h1>}
+      <ButtonGroup toggle>
+        {data?.map((item) => (
+          <ToggleButton
+            key={item.id}
+            type="radio"
+            variant="light"
+            name="radio"
+            value={item.id}
+            checked={radioValue === item.id}
+            onChange={(e: ChangeEvent<any>) => {
+              setRadioValue(e.currentTarget.value)
+              setFilterByRace(item.id)
+              setName(item.name)
+            }}
+          >
+            {item.name}
+          </ToggleButton>
+        ))}
+      </ButtonGroup>
+
+      {filterByRace !== null && (
+        <Button className={'ml-2'} variant={'outline-primary'} onClick={() => setFilterByRace(null)}>
+          Remove filters
+        </Button>
+      )}
+    </div>
   )
 }
 
